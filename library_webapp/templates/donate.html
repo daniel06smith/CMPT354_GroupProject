@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Donate{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Donate an Item</h1>
+  <p>Donating as <strong>{{ current_member['first_name'] }} {{ current_member['last_name'] }}</strong>. Add a book, DVD, or other item to our collection.</p>
+</div>
+<div class="card">
+  <form method="post">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required placeholder="e.g. The Great Gatsby">
+      </div>
+      <div class="form-group">
+        <label for="pub_year">Publication year</label>
+        <input type="number" id="pub_year" name="pub_year" placeholder="e.g. 2018" min="1000" max="2099">
+      </div>
+      <div class="form-group">
+        <label for="genre">Genre</label>
+        <input type="text" id="genre" name="genre" placeholder="e.g. Fiction">
+      </div>
+      <div class="form-group">
+        <label for="type_id">Item type</label>
+        <select id="type_id" name="type_id" required>
+          <option value="">Select type…</option>
+          {% for t in item_types %}
+          <option value="{{ t['type_id'] }}">{{ t['type_name'] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group span2">
+        <label for="library_id">Donate to library</label>
+        <select id="library_id" name="library_id" required>
+          <option value="">Select library…</option>
+          {% for lib in libraries %}
+          <option value="{{ lib['library_id'] }}">{{ lib['name'] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Donate Item</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

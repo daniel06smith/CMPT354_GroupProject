@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Events{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Library Events</h1>
+  <p>Browse upcoming workshops, book clubs, screenings, and more.</p>
+</div>
+
+<div class="card">
+  <form method="get">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="keyword">Keyword</label>
+        <input type="text" id="keyword" name="keyword" value="{{ keyword }}" placeholder="e.g. book club">
+      </div>
+      <div class="form-group">
+        <label for="from_date">From date</label>
+        <input type="text" id="from_date" name="from_date" value="{{ from_date }}" placeholder="YYYY-MM-DD">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <a href="{{ url_for('events') }}" class="btn btn-secondary">Clear</a>
+    </div>
+  </form>
+</div>
+
+{% if results %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Date</th><th>Type</th><th>Room</th><th>Library</th><th>Audience</th><th>Spots left</th></tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr>
+        <td><strong>{{ r['title'] }}</strong></td>
+        <td>{{ r['date'] }}</td>
+        <td>{{ r['event_type'] }}</td>
+        <td>{{ r['room_name'] }}</td>
+        <td>{{ r['library'] }}</td>
+        <td>{{ r['audience'] or '—' }}</td>
+        <td>
+          {% if r['spots_left'] and r['spots_left'] > 0 %}
+            <span class="badge badge-green">{{ r['spots_left'] }}</span>
+          {% else %}
+            <span class="badge badge-grey">Full</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">📅</div>
+  <p>No events found. Try adjusting your search.</p>
+</div>
+{% endif %}
+{% endblock %}

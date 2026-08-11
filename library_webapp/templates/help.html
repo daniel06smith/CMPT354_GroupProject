@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Get Help{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Ask for Help</h1>
+  <p>Submitting as <strong>{{ current_member['first_name'] }} {{ current_member['last_name'] }}</strong>. A librarian will follow up with you.</p>
+</div>
+<div class="card">
+  <form method="post">
+    <div class="form-grid single">
+      <div class="form-group">
+        <label for="description">Describe your request</label>
+        <textarea id="description" name="description" required
+                  placeholder="e.g. I can't locate a book I reserved, or I have a question about my fine."></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

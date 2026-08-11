@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Register for Event{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Register for an Event</h1>
+  <p>Registering as <strong>{{ current_member['first_name'] }} {{ current_member['last_name'] }}</strong>. Spots are limited by room capacity.</p>
+</div>
+
+{% if event_list %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Date</th><th>Type</th><th>Spots left</th><th>Register</th></tr>
+    </thead>
+    <tbody>
+      {% for e in event_list %}
+      <tr>
+        <td><strong>{{ e['title'] }}</strong></td>
+        <td>{{ e['date'] }}</td>
+        <td>{{ e['event_type'] }}</td>
+        <td><span class="badge badge-green">{{ e['spots_left'] }}</span></td>
+        <td>
+          <form method="post" style="display:inline;">
+            <input type="hidden" name="event_id" value="{{ e['event_id'] }}">
+            <button type="submit" class="btn btn-primary btn-sm">Register</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">😔</div>
+  <p>No events with open spots right now. Check back soon!</p>
+</div>
+{% endif %}
+{% endblock %}

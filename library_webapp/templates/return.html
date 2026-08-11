@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Return{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Return a Borrowed Item</h1>
+  <p>Active loans for <strong>{{ current_member['first_name'] }} {{ current_member['last_name'] }}</strong>.</p>
+</div>
+
+{% if loans %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Loan ID</th><th>Title</th><th>Borrowed</th><th>Due</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for loan in loans %}
+      <tr>
+        <td>{{ loan['loan_id'] }}</td>
+        <td><strong>{{ loan['title'] }}</strong></td>
+        <td>{{ loan['loan_date'] }}</td>
+        <td>
+          {% if loan['due_date'] < today %}
+            <span class="badge badge-warm">{{ loan['due_date'] }} ⚠ overdue</span>
+          {% else %}
+            {{ loan['due_date'] }}
+          {% endif %}
+        </td>
+        <td>
+          <form method="post" style="display:inline;">
+            <input type="hidden" name="loan_id" value="{{ loan['loan_id'] }}">
+            <button type="submit" class="btn btn-primary btn-sm">Return</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="icon">✅</div>
+  <p>No active loans — nothing to return.</p>
+</div>
+{% endif %}
+{% endblock %}

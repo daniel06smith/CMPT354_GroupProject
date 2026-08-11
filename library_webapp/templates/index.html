@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="page-header">
+  {% if current_member %}
+    <h1>Welcome back, {{ current_member['first_name'] }}!</h1>
+    <p>
+      {{ current_member['first_name'] }} {{ current_member['last_name'] }} &mdash;
+      Member #{{ current_member['member_id'] }} &mdash;
+      <span class="badge {% if current_member['status_name'] == 'Active' %}badge-green{% elif current_member['status_name'] == 'Suspended' %}badge-warm{% else %}badge-grey{% endif %}">
+        {{ current_member['status_name'] }}
+      </span>
+    </p>
+  {% else %}
+    <h1>Welcome to the Community Library</h1>
+    <p>Your neighbourhood library &mdash; borrow, donate, attend events, and more.</p>
+  {% endif %}
+</div>
+
+{% if not current_member %}
+<div class="card" style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+  <p style="margin:0;color:var(--ink-soft);font-size:.92rem;">
+    Sign in with your library email to borrow items, register for events, and more.
+  </p>
+  <a href="{{ url_for('login') }}" class="btn btn-primary btn-sm">Sign In</a>
+</div>
+{% endif %}
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:1rem;">
+  {% set actions = [
+    ('Browse Catalogue', 'items',       'Search our catalogue and borrow available items'),
+    ('Return',           'return_item', 'Return a borrowed item'),
+    ('Donate',           'donate',      'Add an item to our collection'),
+    ('Find an Event',    'events',      'Browse upcoming library events'),
+    ('Register',         'register',    'Sign up for an event'),
+    ('Volunteer',        'volunteer',   'Join our volunteer programme'),
+    ('Get Help',         'ask_help',    'Ask a librarian for assistance'),
+  ] %}
+  {% for label, endpoint, desc in actions %}
+  <a href="{{ url_for(endpoint) }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer;transition:transform .15s,box-shadow .15s;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.1)'"
+         onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-weight:600;font-size:.95rem;margin-bottom:.3rem;">{{ label }}</div>
+      <div style="font-size:.82rem;color:var(--ink-soft);">{{ desc }}</div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

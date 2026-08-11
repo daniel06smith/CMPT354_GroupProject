@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Library{% endblock %} — Community Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #1a1a2e;
+      --ink-soft:  #4a4a6a;
+      --rule:      #d8d4c8;
+      --parchment: #f7f4ee;
+      --page:      #ffffff;
+      --accent:    #2d6a4f;
+      --accent-lt: #d8ede3;
+      --warm:      #c77c3a;
+      --warn-bg:   #fef3e2;
+      --error-bg:  #fdecea;
+      --error:     #b33a2e;
+      --radius:    6px;
+      --shadow:    0 1px 4px rgba(26,26,46,.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--ink);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+    .nav-brand span { color: var(--warm); }
+    .nav-links {
+      display: flex;
+      gap: .25rem;
+      flex-wrap: wrap;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,.72);
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 500;
+      padding: .35rem .7rem;
+      border-radius: var(--radius);
+      transition: background .15s, color .15s;
+      letter-spacing: .01em;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { background: rgba(255,255,255,.12); color: #fff; }
+
+    /* ── Nav user ── */
+    .nav-user {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .nav-member-name {
+      font-size: .82rem;
+      color: rgba(255,255,255,.85);
+      font-weight: 500;
+    }
+    .nav-user .badge { font-size: .7rem; }
+    .nav-user a.nav-login {
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: .35rem .75rem;
+      border-radius: var(--radius);
+      transition: filter .15s;
+    }
+    .nav-user a.nav-login:hover { filter: brightness(1.1); }
+    .nav-user a.nav-logout {
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      font-size: .8rem;
+      padding: .25rem .55rem;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius);
+      transition: background .15s, color .15s;
+    }
+    .nav-user a.nav-logout:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    /* ── Page shell ── */
+    main { flex: 1; padding: 2.5rem 2rem; width: 100%; }
+
+    .page-header {
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .page-header h1 {
+      font-family: 'Lora', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .page-header p { margin-top: .35rem; color: var(--ink-soft); font-size: .92rem; }
+
+    /* ── Flash messages ── */
+    .flashes { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: .6rem; }
+    .flash {
+      padding: .75rem 1rem;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      border-left: 3px solid;
+    }
+    .flash.success { background: var(--accent-lt); border-color: var(--accent); color: #1a3d2e; }
+    .flash.error   { background: var(--error-bg);  border-color: var(--error);  color: var(--error); }
+    .flash.warning { background: var(--warn-bg);   border-color: var(--warm);   color: #7a4a10; }
+    .flash.info    { background: #eef4ff;           border-color: #4a7fd4;       color: #1e3a6e; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--page);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .card + .card { margin-top: 1rem; }
+
+    /* ── Forms ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid.single { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group.span2 { grid-column: span 2; }
+
+    label { font-size: .82rem; font-weight: 600; color: var(--ink-soft); letter-spacing: .04em; text-transform: uppercase; }
+    input[type=text], input[type=number], select, textarea {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: .55rem .75rem;
+      font-size: .95rem;
+      font-family: inherit;
+      color: var(--ink);
+      background: var(--page);
+      transition: border-color .15s;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45,106,79,.12);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .6rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: filter .15s, transform .1s;
+      font-family: inherit;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary   { background: var(--accent); color: #fff; }
+    .btn-primary:hover   { filter: brightness(1.1); }
+    .btn-secondary { background: var(--parchment); color: var(--ink); border: 1px solid var(--rule); }
+    .btn-secondary:hover { background: var(--rule); }
+    .btn-sm { padding: .35rem .75rem; font-size: .82rem; }
+
+    .form-actions { margin-top: 1.25rem; display: flex; gap: .75rem; align-items: center; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin-top: 1.25rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    thead th {
+      text-align: left;
+      padding: .6rem .85rem;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-bottom: 2px solid var(--rule);
+      background: var(--parchment);
+    }
+    tbody tr { border-bottom: 1px solid var(--rule); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: .65rem .85rem; vertical-align: top; }
+    tbody tr:hover { background: #f9f8f5; }
+
+    .badge {
+      display: inline-block;
+      padding: .15rem .55rem;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .badge-green { background: var(--accent-lt); color: var(--accent); }
+    .badge-grey  { background: var(--rule);       color: var(--ink-soft); }
+    .badge-warm  { background: var(--warn-bg);    color: var(--warm); }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--ink-soft);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: .75rem; }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .8rem;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--rule);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; gap: 1rem; }
+      main { padding: 1.5rem 1rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.span2 { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="{{ url_for('index') }}">&#128218; Community <span>Library</span></a>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('items') }}"      {% if request.endpoint in ('items', 'borrow') %}class="active"{% endif %}>Catalogue</a></li>
+      <li><a href="{{ url_for('return_item') }}"{% if request.endpoint == 'return_item'%}class="active"{% endif %}>Return</a></li>
+      <li><a href="{{ url_for('donate') }}"     {% if request.endpoint == 'donate'     %}class="active"{% endif %}>Donate</a></li>
+      <li><a href="{{ url_for('events') }}"     {% if request.endpoint == 'events'     %}class="active"{% endif %}>Events</a></li>
+      <li><a href="{{ url_for('register') }}"   {% if request.endpoint == 'register'   %}class="active"{% endif %}>Register</a></li>
+      <li><a href="{{ url_for('volunteer') }}"  {% if request.endpoint == 'volunteer'  %}class="active"{% endif %}>Volunteer</a></li>
+      <li><a href="{{ url_for('ask_help') }}"   {% if request.endpoint == 'ask_help'   %}class="active"{% endif %}>Get Help</a></li>
+    </ul>
+    <div class="nav-user">
+      {% if current_member %}
+        <span class="nav-member-name">{{ current_member['first_name'] }} {{ current_member['last_name'] }}</span>
+        <span class="badge {% if current_member['status_name'] == 'Active' %}badge-green{% elif current_member['status_name'] == 'Suspended' %}badge-warm{% else %}badge-grey{% endif %}">
+          {{ current_member['status_name'] }}
+        </span>
+        <a href="{{ url_for('logout') }}" class="nav-logout">Log out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="nav-login">Log in</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>Community Library System &mdash; CMPT 354</footer>
+</body>
+</html>
