@@ -75,8 +75,8 @@ def find_item():
                t.type_name        AS type,
                a.status_name      AS acq_status,
                l.name             AS library,
-               GROUP_CONCAT(au.first_name || ' ' || au.last_name, ', ') AS authors,
-               SUM(CASE WHEN cs.status_name = 'Available' THEN 1 ELSE 0 END) AS copies_available
+               GROUP_CONCAT(DISTINCT au.first_name || ' ' || au.last_name) AS authors,
+               COUNT(DISTINCT CASE WHEN cs.status_name = 'Available' THEN ic.item_copy_id END) AS copies_available
         FROM   Item i
         JOIN   Type              t  ON t.type_id               = i.type_id
         JOIN   Acquisition_Status a ON a.acquisition_status_id = i.acquisition_status_id
