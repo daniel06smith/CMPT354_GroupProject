@@ -222,7 +222,7 @@ def donate_item():
             return
         TYPES   = [(r["type_id"],   r["type_name"])   for r in con.execute("SELECT type_id, type_name FROM Type")]
         donated_status_id = con.execute(
-            "SELECT acquisition_status_id FROM Acquisition_Status WHERE status_name='Donated'"
+            "SELECT acquisition_status_id FROM Acquisition_Status WHERE status_name='Acquired'"
         ).fetchone()["acquisition_status_id"]
         available_status_id = con.execute(
             "SELECT copy_status_id FROM Copy_Status WHERE status_name='Available'"

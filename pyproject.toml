@@ -5,3 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "faker>=40.36.0",
+    "ipykernel>=7.3.0",
+    "nbconvert>=7.17.1",
+]

@@ -60,6 +60,8 @@ Audience(audience_id PK, audience_type UNIQUE)
 ### Core entity tables
 ```sql
 Library(library_id PK, name, address)
+-- Populated data has exactly ONE row (library_id=1, 'SFU Library'); schema
+-- supports multiple libraries but this project intentionally seeds only one.
 
 Personnel(personnel_id PK, first_name, last_name, email UNIQUE, phone,
           role, start_date, salary CHECK(>=0),
@@ -141,7 +143,7 @@ Help_Request(help_request_id PK, request_date, description,
 
 ```
 Type:               Book, DVD, Magazine, Audiobook, E-Book
-Acquisition_Status: Purchased, Donated, Transferred
+Acquisition_Status: Not Yet Ordered, Ordered, Acquired
 Copy_Status:        Available, Checked Out, Lost, Damaged, Under Repair
 Member_Status:      Active, Suspended, Expired
 Request_Status:     Open, In Progress, Resolved, Closed

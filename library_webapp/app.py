@@ -252,7 +252,7 @@ def donate():
         library_id = request.form.get("library_id","").strip()
 
         donated_status = query_one(
-            "SELECT acquisition_status_id FROM Acquisition_Status WHERE status_name='Donated'"
+            "SELECT acquisition_status_id FROM Acquisition_Status WHERE status_name='Acquired'"
         )
         available_status = query_one(
             "SELECT copy_status_id FROM Copy_Status WHERE status_name='Available'"
